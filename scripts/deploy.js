@@ -4,7 +4,7 @@ async function main() {
   const Certificate = await hre.ethers.deployContract("Certificate");
 
   await Certificate.waitForDeployment();
-
+  console.log(Certificate)
   console.log(`Deployed to: ${Certificate.target}`);
 }
 

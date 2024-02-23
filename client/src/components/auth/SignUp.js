@@ -254,7 +254,7 @@ function SignUp() {
           </Typography>
         </Typography>
       </Box>
-    </Card>
+ </Card>
   );
 }
 

@@ -84,6 +84,7 @@ function BirthCertificate({ contract }) {
         `/certificate/${formik.values.issuedTo}/birth-certificate/${request.hash}`
       );
     } catch (error) {
+      console.log(error);
       handleOpen();
     }
   }
@@ -368,7 +369,11 @@ function BirthCertificate({ contract }) {
               </Typography>
             )}
           </FormControl>
-          <Button variant="contained" fullWidth type="submit">
+          <Button variant="contained" fullWidth
+           type="submit"
+          // onClick={() => console.log("clicked")}
+          // onClick={createBirthCertificate}
+          >
             Create Certificate
           </Button>
         </Stack>

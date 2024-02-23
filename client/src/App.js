@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import certificate from "./artifacts/contracts/Certificate.sol/Certificate.json";
-import BirthCertificate from "./components/BirthCertificate";
-import ShowCertificate from "./components/ShowCertificate";
 import { ethers } from "ethers";
 import { Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -10,40 +8,61 @@ import Notify from "./components/auth/Notify";
 import Verified from "./components/auth/Verified";
 import Home from "./components/Home/Home";
 import SignIn from "./components/auth/SignIn";
+import BirthCertificate from "./components/BirthCertificate";
+import ShowCertificate from "./components/ShowCertificate";
 import LandDeed from "./components/Forms/LandDeed";
 
 function App() {
   const [account, setAccount] = useState("");
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
+
   useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const loadProvider = async () => {
       try {
-        if (provider) {
-          window.ethereum.on("accountsChanged", () => window.location.reload());
-          window.ethereum.on("chainChanged", () => window.location.reload());
-          await provider.send("eth_requestAccounts", []);
-          const signer = provider.getSigner();
-          const address = await signer.getAddress();
-          setAccount(address);
-          let contractaddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-          const contract = new ethers.Contract(
-            contractaddress,
-            certificate.abi,
-            signer
-          );
-          setContract(contract);
-          setProvider(provider);
+        const ethereumProvider = getEthereumProvider();
+        if (ethereumProvider) {
+          await handleProviderChanges(ethereumProvider);
+          setProvider(ethereumProvider);
         } else {
           alert("Metamask is not installed in your browser :(");
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error loading provider:", error);
       }
     };
-    provider && loadProvider();
+
+    loadProvider();
   }, []);
+
+  const getEthereumProvider = () => {
+    return window.ethereum ? new ethers.providers.Web3Provider(window.ethereum) : null;
+  };
+
+  const handleProviderChanges = async (ethereumProvider) => {
+    ethereumProvider.on("accountsChanged", () => updateAccount(ethereumProvider));
+    ethereumProvider.on("chainChanged", () => handleChainChange(ethereumProvider));
+
+    await ethereumProvider.send("eth_requestAccounts", []);
+    updateAccount(ethereumProvider);
+
+    const signer = ethereumProvider.getSigner();
+    const contractAddress = "0x9d5C11d77B3f579047d3848EF6a261b6F319D44B";
+    const contractInstance = new ethers.Contract(contractAddress, certificate.abi, signer);
+    console.log(contractInstance);
+    setContract(contractInstance);
+  };
+
+  const updateAccount = async (ethereumProvider) => {
+    const signer = ethereumProvider.getSigner();
+    const address = await signer.getAddress();
+    setAccount(address);
+  };
+
+  const handleChainChange = (ethereumProvider) => {
+    // Handle chain change if needed
+  };
+
   return (
     <Box
       className="App"

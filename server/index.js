@@ -8,9 +8,9 @@ import { User } from "./models/auth.js";
 import authRoute from "./routes/signUp.js";
 import { aadharDetails } from "./API/aadharDetails.js";
 import aadharRoute from "./routes/aadhar.js";
-
+// mongodb://localhost:27017
 mongoose
-  .connect("mongodb://127.0.0.1:27017/sih", {
+  .connect("mongodb+srv://mayuri:mayuri@cluster0.xv0e6c4.mongodb.net/", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -19,9 +19,11 @@ mongoose
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
+// console.log(process.env.SESSIONSECRET)
 const session_config = {
-  secret: process.env.SESSIONSECRET,
+  // secret: process.env.SESSIONSECRET,
+  secret: "MINU",
   resave: true,
   saveUninitialized: true,
   name: "session",
@@ -32,7 +34,7 @@ const session_config = {
   },
 };
 
-app.use(cors({ origin: "http://localhost:3000" }));
+// app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session(session_config));

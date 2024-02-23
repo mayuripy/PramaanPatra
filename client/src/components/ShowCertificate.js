@@ -15,7 +15,7 @@ function ShowCertificate({ contract }) {
         const fetchedData = await contract.getAllChildDetails(`${params.id}`);
         setData(fetchedData);
       } catch (error) {
-        console.log(error.message);
+        console.log(error);
       }
     };
     fetchedData();

@@ -49,6 +49,17 @@ contract Certificate {
         haveBirthCertificate.push(_issuedTo);
     }
 
+    function getAllChild() external view returns (ChildDetails[] memory) {
+         ChildDetails[] memory allChildDetails = new ChildDetails[](haveBirthCertificate.length);
+
+    for (uint i = 0; i < haveBirthCertificate.length; i++) {
+        address childAddress = haveBirthCertificate[i];
+        allChildDetails[i] = childDetails[childAddress];
+    }
+
+    return allChildDetails;
+    }
+    
     function getAllChildDetails(
         address _issuedTo
     ) external view returns (ChildDetails memory) {
